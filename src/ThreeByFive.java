@@ -21,6 +21,7 @@ public class ThreeByFive {
         System.out.print(nums[2][2] + " ");
         System.out.print(nums[2][3] + " ");
         System.out.println(nums[2][4]);
+        System.out.println("");
 
 //change three other values to negative numbers
         nums[1][4] = -4;

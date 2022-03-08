@@ -94,14 +94,25 @@ public class MapDataDrawer
      * Draws the grid using the given Graphics object.
      * Colors should be grayscale values 0-255, scaled based on min/max values in grid
      */
-    public void drawMap(Graphics g){
-        double dcolor = 4334/255.0;
-        int increment = (int) dcolor;
-        for (int row = 0; row < grid.length; row++) {
-            for (int col = 0; col < grid[0].length; col++) {
+    public void drawMap(Graphics g) {
+            for (int row = 0; row < grid.length; row++) {
+                for (int col = 0; col < grid[0].length; col++) {
                 int pixel = grid[row][col];
                 if (pixel == 4334) {
-
+                    int c = 255;
+                    g.setColor(new Color(c, c, c));
+                    g.fillRect(col, row, 1, 1);
+                }
+                else if (pixel == 1099) {
+                    int c = 0;
+                    g.setColor(new Color(c, c, c));
+                    g.fillRect(col, row, 1, 1);
+                }
+                else {
+                    double x = ((pixel-1099)/3235.0) * 255.0;
+                    int c = (int) x;
+                    g.setColor(new Color(c, c, c));
+                    g.fillRect(col, row, 1, 1);
                 }
 
             }
@@ -120,6 +131,9 @@ public class MapDataDrawer
      * @return the total change in elevation traveled from West-to-East
      */
     public int drawLowestElevPath(Graphics g, int row){
+        for (int col = 0; col < grid.length-1; col++) {
+
+        }
         return -1;
     }
 

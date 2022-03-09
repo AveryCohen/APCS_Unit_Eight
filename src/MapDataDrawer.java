@@ -1,3 +1,4 @@
+import javax.swing.plaf.ColorUIResource;
 import java.util.*;
 import java.io.*;
 import java.awt.*;
@@ -131,19 +132,107 @@ public class MapDataDrawer
      * @return the total change in elevation traveled from West-to-East
      */
     public int drawLowestElevPath(Graphics g, int row){
-        for (int col = 0; col < grid.length-1; col++) {
-
+        int currentRow = row;
+        int elevation = 0;
+        g.fillRect(0, row, 1, 1);
+        for (int col = 1; col < grid[0].length; col++) {
+            int current = grid[currentRow][col - 1];
+            if (grid.length == currentRow) {
+                int forward = grid[currentRow][col];
+                int up = grid[currentRow - 1][col];
+                if (Math.abs(current - forward) < Math.abs(current - up)) {
+                    g.fillRect(col, currentRow, 1, 1);
+                    elevation+= Math.abs(current - forward);
+                }
+                else if (Math.abs(current - up) < Math.abs(current - forward)) {
+                    currentRow-=1;
+                    g.fillRect(col, currentRow, 1, 1);
+                    elevation+= Math.abs(current - up);
+                }
+                else {
+                    g.fillRect(col, currentRow, 1, 1);
+                    elevation+= Math.abs(current - forward);
+                }
+            }
+            else if (currentRow == 0) {
+                int forward = grid[currentRow][col];
+                int down = grid[currentRow + 1][col];
+                if (Math.abs(current - forward) < Math.abs(current - down)) {
+                    g.fillRect(col, currentRow, 1, 1);
+                    elevation+= Math.abs(current - forward);
+                }
+                else if (Math.abs(current - down) < Math.abs(current - forward)) {
+                    currentRow+=1;
+                    g.fillRect(col, currentRow, 1, 1);
+                    elevation+= Math.abs(current - down);
+                }
+                else {
+                        g.fillRect(col, currentRow, 1, 1);
+                        elevation+= Math.abs(current - forward);
+                }
+            }
+            else {
+                int forward = grid[currentRow][col];
+                int up = grid[currentRow - 1][col];
+                int down = grid[currentRow + 1][col];
+                if (Math.abs(current - forward) < Math.abs(current - up) && Math.abs(current - forward) < Math.abs(current - down)) {
+                    g.fillRect(col, currentRow, 1, 1);
+                    elevation+= Math.abs(current - forward);
+                }
+                else if (Math.abs(current - up) < Math.abs(current - forward) && Math.abs(current - up) < Math.abs(current - down)) {
+                    currentRow-=1;
+                    g.fillRect(col, currentRow, 1, 1);
+                    elevation+= Math.abs(current - up);
+                }
+                else if (Math.abs(current - down) < Math.abs(current - up) && Math.abs(current - down) < Math.abs(current - forward)) {
+                    currentRow+=1;
+                    g.fillRect(col, currentRow, 1, 1);
+                    elevation+= Math.abs(current - down);
+                }
+                else {
+                    if (Math.abs(current - forward) == Math.abs(current - up) || Math.abs(current - forward) == Math.abs(current - down)) {
+                        g.fillRect(col, currentRow, 1, 1);
+                        elevation+= Math.abs(current - forward);
+                    }
+                    else {
+                        int flip = (int)(Math.random() * 2) + 1;
+                        if (flip == 1) {
+                            currentRow+=1;
+                            g.fillRect(col, currentRow, 1, 1);
+                            elevation+= Math.abs(current - down);
+                        }
+                        else {
+                            currentRow-=1;
+                            g.fillRect(col, currentRow, 1, 1);
+                            elevation+= Math.abs(current - up);
+                        }
+                    }
+                }
+            }
         }
-        return -1;
+        return elevation;
     }
 
     /**
      * @return the index of the starting row for the lowest-elevation-change path in the entire grid.
      */
     public int indexOfLowestElevPath(Graphics g){
-        return -1;
-
+        int value = drawLowestElevPath(g, 0);
+        int temp = 0;
+        for (int row = 0; row < grid.length-2; row++) {
+                if (drawLowestElevPath(g, row) < drawLowestElevPath(g, (row+1))) {
+                    temp = drawLowestElevPath(g, row);
+                    if(temp<value) {
+                        value = temp;
+                    }
+                }
+                else if (drawLowestElevPath(g, row) > drawLowestElevPath(g, (row+1))) {
+                    temp = drawLowestElevPath(g, (row + 1));
+                    if(temp<value) {
+                        value = temp;
+                    }
+                }
+            }
+        return value;
     }
-
-
 }

@@ -80,11 +80,11 @@ public class MapDataDrawer
         int temp = 0;
         for (int row = 0; row < grid.length; row++) {
             if (grid[row][col] < grid[0][col]) {
-                indexTemp = row;
                 temp = grid[row][col];
+                indexTemp = row;
                 if (temp < value) {
-                    indexValue = indexTemp;
                     value = temp;
+                    indexValue = indexTemp;
                 }
             }
         }
@@ -138,24 +138,7 @@ public class MapDataDrawer
         for (int col = 1; col < grid[0].length; col++) {
             int current = grid[currentRow][col - 1];
 
-            if (grid.length == currentRow) {
-                int forward = grid[currentRow][col];
-                int up = grid[currentRow - 1][col];
-                if (Math.abs(current - forward) < Math.abs(current - up)) {
-                    g.fillRect(col, currentRow, 1, 1);
-                    elevation+= Math.abs(current - forward);
-                }
-                else if (Math.abs(current - up) < Math.abs(current - forward)) {
-                    currentRow-=1;
-                    g.fillRect(col, currentRow, 1, 1);
-                    elevation+= Math.abs(current - up);
-                }
-                else {
-                    g.fillRect(col, currentRow, 1, 1);
-                    elevation+= Math.abs(current - forward);
-                }
-            }
-            else if (currentRow == 0) {
+            if (currentRow == 0) {
                 int forward = grid[currentRow][col];
                 int down = grid[currentRow + 1][col];
                 if (Math.abs(current - forward) < Math.abs(current - down)) {
@@ -172,7 +155,7 @@ public class MapDataDrawer
                         elevation+= Math.abs(current - forward);
                 }
             }
-            else {
+            else if (currentRow < grid.length-1) {
                 int forward = grid[currentRow][col];
                 int up = grid[currentRow - 1][col];
                 int down = grid[currentRow + 1][col];
@@ -210,6 +193,23 @@ public class MapDataDrawer
                     }
                 }
             }
+            else {
+                int forward = grid[currentRow][col];
+                int up = grid[currentRow - 1][col];
+                if (Math.abs(current - forward) < Math.abs(current - up)) {
+                    g.fillRect(col, currentRow, 1, 1);
+                    elevation+= Math.abs(current - forward);
+                }
+                else if (Math.abs(current - up) < Math.abs(current - forward)) {
+                    currentRow-=1;
+                    g.fillRect(col, currentRow, 1, 1);
+                    elevation+= Math.abs(current - up);
+                }
+                else {
+                    g.fillRect(col, currentRow, 1, 1);
+                    elevation+= Math.abs(current - forward);
+                }
+            }
         }
         return elevation;
     }
@@ -219,21 +219,25 @@ public class MapDataDrawer
      */
     public int indexOfLowestElevPath(Graphics g){
         int value = drawLowestElevPath(g, 0);
+        int indexVal = 0;
         int temp = 0;
+        int tempVal = 0;
         for (int row = 1; row < grid.length-1; row++) {
                 if (drawLowestElevPath(g, row) < drawLowestElevPath(g, (row+1))) {
                     temp = drawLowestElevPath(g, row);
                     if(temp<value) {
                         value = temp;
+                        indexVal = row;
                     }
                 }
                 else if (drawLowestElevPath(g, row) > drawLowestElevPath(g, (row+1))) {
                     temp = drawLowestElevPath(g, (row + 1));
                     if(temp<value) {
                         value = temp;
+                        indexVal = row;
                     }
                 }
             }
-        return value;
+        return indexVal;
     }
 }

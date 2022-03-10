@@ -137,6 +137,7 @@ public class MapDataDrawer
         g.fillRect(0, row, 1, 1);
         for (int col = 1; col < grid[0].length; col++) {
             int current = grid[currentRow][col - 1];
+
             if (grid.length == currentRow) {
                 int forward = grid[currentRow][col];
                 int up = grid[currentRow - 1][col];
@@ -219,7 +220,7 @@ public class MapDataDrawer
     public int indexOfLowestElevPath(Graphics g){
         int value = drawLowestElevPath(g, 0);
         int temp = 0;
-        for (int row = 0; row < grid.length-2; row++) {
+        for (int row = 1; row < grid.length-1; row++) {
                 if (drawLowestElevPath(g, row) < drawLowestElevPath(g, (row+1))) {
                     temp = drawLowestElevPath(g, row);
                     if(temp<value) {
